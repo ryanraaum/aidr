@@ -5,6 +5,8 @@ test_that("this_exists finds true things", {
   expect_true(this_exists(TRUE))
   expect_true(this_exists(FALSE))
   expect_true(this_exists("a word"))
+  expect_true(this_exists(c("a", "b"))) # single response regardless of length of input
+  expect_true(this_exists(0))
 })
 
 test_that("this_exists finds false things", {
