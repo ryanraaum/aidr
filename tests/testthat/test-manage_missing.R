@@ -50,3 +50,16 @@ test_that("this_or_empty_string returns empty string when appropriate", {
   expect_equal(this_or_empty_string(NULL), "")
   expect_equal(this_or_empty_string(c(NA, NA)), c("", ""))
 })
+
+test_that("this_or_na returns this", {
+  one_string <- "hello"
+  two_strings <- c(one_string, one_string)
+  expect_equal(this_or_na(one_string), one_string)
+  expect_equal(this_or_na(two_strings), two_strings)
+})
+
+test_that("this_or_na returns NA when appropriate", {
+  expect_equal(this_or_na(NA), NA)
+  expect_equal(this_or_na(NULL), NA)
+  expect_equal(this_or_na(c(NA, NA)), c(NA, NA))
+})

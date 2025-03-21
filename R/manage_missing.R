@@ -24,3 +24,15 @@ this_or_empty_string <- function(x) {
   if (length(x) > 1) { return(.vectorized_this_or_empty_string(x))}
   .singular_this_or_empty_string(x)
 }
+
+.singular_this_or_na <- function(x) {
+  ifelse(this_exists(x), x, NA)
+}
+
+.vectorized_this_or_na <- Vectorize(.singular_this_or_na, USE.NAMES=FALSE)
+
+this_or_na <- function(x) {
+  if (length(x) > 1) { return(.vectorized_this_or_na(x)) }
+  .singular_this_or_na(x)
+}
+
