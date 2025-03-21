@@ -18,6 +18,26 @@ test_that("this_exists finds false things", {
   expect_false(this_exists(c(NA, NA)))
 })
 
+test_that("this_is_singular finds true things", {
+  expect_true(this_is_singular("a"))
+  expect_true(this_is_singular(1))
+  expect_true(this_is_singular(c("a", "a")))
+  expect_true(this_is_singular(c(1,1)))
+  expect_true(this_is_singular(c(TRUE,TRUE)))
+})
+
+test_that("this_is_singular finds false things", {
+  expect_false(this_is_singular(c("a", "b")))
+  expect_false(this_is_singular(c(1,2)))
+  expect_false(this_is_singular(c(TRUE,FALSE)))
+})
+
+test_that("this_is_singular handles missing and null", {
+  # and by "handles", we're going with: returns FALSE
+  expect_false(this_is_singular(NA))
+  expect_false(this_is_singular(NULL))
+})
+
 test_that("this_or_empty_string returns this", {
   one_string <- "hello"
   two_strings <- c(one_string, one_string)

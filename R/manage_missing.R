@@ -5,6 +5,11 @@ this_exists <- function(x) {
   !(all(is.na(x)) || all(is.null(x)) || length(x) == 0)
 }
 
+this_is_singular <- function(x) {
+  if (any(is.na(x)) || any(is.null(x))) { return(FALSE) }
+  length(unique(x)) == 1
+}
+
 ## these are vectorized; they return a value for each entry in a input vector
 
 .singular_this_or_empty_string <- function(x) {
