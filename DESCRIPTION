@@ -1,0 +1,11 @@
+Package: aidR
+Type: Package
+Title: A Personal Set of Aid Functions for R Programming
+Version: 0.1.0
+Authors@R: c(
+    person("Ryan", "Raaum", , "ryan.raaum@lehman.cuny.edu", role = c("aut", "cre"),
+           comment = c(ORCID = "https://orcid.org/0000-0003-4723-5475"))
+Description: Functions that I otherwise keep recreating in most projects.
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
