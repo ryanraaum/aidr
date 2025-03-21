@@ -1,3 +1,4 @@
+
 test_that("this_exists finds true things", {
   expect_true(this_exists(4))
   expect_true(this_exists(c(2,4,6)))
