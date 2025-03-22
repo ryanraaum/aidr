@@ -39,6 +39,10 @@ There are a few different categories of functions in the package, listed below.
 ```{r example}
 library(aidr)
 
-# this_exists(NULL)
+this_exists("this does exist")
+this_exists(NULL) # but this does not
+this_exists(c()) # neither does this (is empty)
+this_exists(list()) # nor this
+this_exists(c(1, NA, 2)) # is 
 ```
 
