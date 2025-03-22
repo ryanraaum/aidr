@@ -7,6 +7,6 @@
 # * https://testthat.r-lib.org/articles/special-files.html
 
 library(testthat)
-library(aidR)
+library(aidr)
 
-test_check("aidR")
+test_check("aidr")

@@ -1,22 +1,22 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# aidR
+# aidr
 
 <!-- badges: start -->
 <!-- badges: end -->
 
-The goal of aidR is to collect together a set of R functions that I
+The goal of aidr is to collect together a set of R functions that I
 otherwise keep on recreating in most projects.
 
 ## Installation
 
-You can install the development version of aidR from
+You can install the development version of aidr from
 [GitHub](https://github.com/) with:
 
 ``` r
 # install.packages("pak")
-pak::pak("ryanraaum/aidR")
+pak::pak("ryanraaum/aidr")
 ```
 
 ## Usage
@@ -27,7 +27,7 @@ below.
 ### Dealing with missing data of various sorts
 
 ``` r
-library(aidR)
+library(aidr)
 
 # this_exists(NULL)
 ```
