@@ -24,11 +24,14 @@ test_that("this_is_singular finds true things", {
   expect_true(this_is_singular(1))
   expect_true(this_is_singular(c("a", "a")))
   expect_true(this_is_singular(c(1,1)))
+  expect_true(this_is_singular(list("a", "a")))
   expect_true(this_is_singular(c(TRUE,TRUE)))
 })
 
 test_that("this_is_singular finds false things", {
   expect_false(this_is_singular(c("a", "b")))
+  expect_false(this_is_singular(c("a", NA)))
+  expect_false(this_is_singular(list("a", NULL)))
   expect_false(this_is_singular(c(1,2)))
   expect_false(this_is_singular(c(TRUE,FALSE)))
 })
