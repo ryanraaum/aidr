@@ -40,9 +40,26 @@ There are a few different categories of functions in the package, listed below.
 library(aidr)
 
 this_exists("this does exist")
-this_exists(NULL) # but this does not
+this_exists(c(1, 2)) # so does this
+this_exists(NA) # but this does not
+this_exists(NULL) # this also does not
 this_exists(c()) # neither does this (is empty)
 this_exists(list()) # nor this
-this_exists(c(1, NA, 2)) # is 
+this_exists(c(1, 2, NA)) # BUT this does (vector has at least one non-NA)
+
+this_is_singular(1) # TRUE
+this_is_singular(c(1, 1)) # TRUE, only one unique value
+this_is_singular(c(1, 2)) # FALSE
+this_is_singular(c(1, NA)) # anything with missing data is FALSE
+
+this_or_empty_string("this")
+this_or_empty_string(NA)
+this_or_empty_string(NULL)
+this_or_empty_string(c("this", NA))
+
+this_or_na("this")
+this_or_na(NA)
+this_or_na(NULL)
+this_or_na(c("this", NA))
 ```
 
