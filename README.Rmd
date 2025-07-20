@@ -57,6 +57,9 @@ this_or_empty_string(NA)
 this_or_empty_string(NULL)
 this_or_empty_string(c("this", NA))
 
+this_or_empty_string(list("a", "b")) # NOTE: lists are *simplified*
+this_or_empty_string(list(NULL, NULL))
+
 this_or_na("this")
 this_or_na(NA)
 this_or_na(NULL)

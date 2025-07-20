@@ -4,6 +4,7 @@
 # aidr
 
 <!-- badges: start -->
+
 <!-- badges: end -->
 
 The goal of aidr is to collect together a set of R functions that I
@@ -61,6 +62,11 @@ this_or_empty_string(NULL)
 #> [1] ""
 this_or_empty_string(c("this", NA))
 #> [1] "this" ""
+
+this_or_empty_string(list("a", "b")) # NOTE: lists are *simplified*
+#> [1] "a" "b"
+this_or_empty_string(list(NULL, NULL))
+#> [1] "" ""
 
 this_or_na("this")
 #> [1] "this"

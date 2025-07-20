@@ -2,6 +2,7 @@
 
 export(this_exists)
 export(this_is_singular)
+export(this_or_default_value)
 export(this_or_empty_string)
 export(this_or_na)
 export(tobasictext)

@@ -53,7 +53,23 @@ test_that("this_or_empty_string returns empty string when appropriate", {
   expect_equal(this_or_empty_string(NA), "")
   expect_equal(this_or_empty_string(NULL), "")
   expect_equal(this_or_empty_string(c(NA, NA)), c("", ""))
+  expect_equal(this_or_empty_string(list(NULL, NULL)), c("", ""))
 })
+
+test_that("this_or_default_value returns this", {
+  one_string <- "hello"
+  two_strings <- c(one_string, one_string)
+  expect_equal(this_or_default_value(one_string, "default"), one_string)
+  expect_equal(this_or_default_value(two_strings, "default"), two_strings)
+})
+
+test_that("this_or_default_value returns default value when appropriate", {
+  expect_equal(this_or_default_value(NA, "default"), "default")
+  expect_equal(this_or_default_value(NULL, "default"), "default")
+  expect_equal(this_or_default_value(c(NA, NA), "default"), c("default", "default"))
+  expect_equal(this_or_default_value(list(NULL, NULL), "default"), c("default", "default"))
+})
+
 
 test_that("this_or_na returns this", {
   one_string <- "hello"
