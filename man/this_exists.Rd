@@ -2,31 +2,46 @@
 % Please edit documentation in R/manage_missing.R
 \name{this_exists}
 \alias{this_exists}
-\title{Test if an object exists}
+\title{Test if an object exists (is not NA, NULL, or empty)}
 \usage{
 this_exists(x)
 }
 \arguments{
-\item{x}{Any object}
+\item{x}{Any object to test (vector, list, scalar, etc.)}
 }
 \value{
-TRUE or FALSE
+Single logical value: `TRUE` if object has content (including
+  FALSE, 0, or empty strings), `FALSE` if object is NA, NULL, or has
+  zero length.
 }
 \description{
-Test if an object exists
+Returns a single logical value indicating whether an object has content.
+Useful as a universal "has value" check that handles NA, NULL, and empty
+vectors/lists consistently. Always returns a single TRUE/FALSE regardless
+of input length.
 }
 \examples{
 # these are TRUE
 this_exists(4)
+#> [1] TRUE
 this_exists(TRUE)
+#> [1] TRUE
 this_exists(FALSE)
+#> [1] TRUE
 this_exists("a word")
+#> [1] TRUE
 this_exists(c("a", "b"))
+#> [1] TRUE
 this_exists(0)
+#> [1] TRUE
 
 # these are FALSE
 this_exists(c())
+#> [1] FALSE
 this_exists(list())
+#> [1] FALSE
 this_exists(NULL)
+#> [1] FALSE
 this_exists(NA)
+#> [1] FALSE
 }

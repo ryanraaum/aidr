@@ -10,7 +10,10 @@ this_or_empty_string(x)
 \item{x}{An object, list, or vector}
 }
 \value{
-Object or empty string ("")
+Character string or character vector. If `x` is a vector or list,
+  returns a character vector with NAs/NULLs replaced by empty strings.
+  Lists are simplified to character vectors. Vectorized to handle vectors
+  element-wise.
 }
 \description{
 Returns given object if it exists, otherwise empty string
@@ -21,12 +24,25 @@ two_strings <- c(one_string, one_string)
 
 # returns the given object
 this_or_empty_string(one_string)
+#> [1] "hello"
 this_or_empty_string(two_strings)
+#> [1] "hello" "hello"
 
 # returns an empty string ("")
 this_or_empty_string(NA)
+#> [1] ""
 this_or_empty_string(NULL)
+#> [1] ""
 
 # returns c("", "") - function is vectorized
 this_or_empty_string(c(NA, NA))
+#> [1] "" ""
+
+# Mixed NA and valid values
+this_or_empty_string(c("a", NA, "b"))
+#> [1] "a" ""  "b"
+
+# List input simplified to character vector
+this_or_empty_string(list("a", NULL, "b"))
+#> [1] "a" ""  "b"
 }

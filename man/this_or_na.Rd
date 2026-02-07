@@ -2,7 +2,7 @@
 % Please edit documentation in R/manage_missing.R
 \name{this_or_na}
 \alias{this_or_na}
-\title{Returns given object if it exists, otherwise empty string}
+\title{Returns given object if it exists, otherwise NA}
 \usage{
 this_or_na(x)
 }
@@ -10,10 +10,12 @@ this_or_na(x)
 \item{x}{An object, list, or vector}
 }
 \value{
-Object or NA
+Original value if it exists, otherwise NA. If `x` is a vector,
+  returns a vector with NAs/NULLs replaced by NA (effectively no change
+  for NA values). Vectorized to handle vectors element-wise.
 }
 \description{
-Returns given object if it exists, otherwise empty string
+Returns given object if it exists, otherwise NA
 }
 \examples{
 one_string <- "hello"
@@ -21,12 +23,21 @@ two_strings <- c(one_string, one_string)
 
 # returns the given object
 this_or_na(one_string)
+#> [1] "hello"
 this_or_na(two_strings)
+#> [1] "hello" "hello"
 
 # returns NA
 this_or_na(NA)
+#> [1] NA
 this_or_na(NULL)
+#> [1] NA
 
 # returns c(NA, NA) - function is vectorized
 this_or_na(c(NA, NA))
+#> [1] NA NA
+
+# Mixed NA and valid values
+this_or_na(c("a", NA, "b"))
+#> [1] "a" NA  "b"
 }

@@ -9,13 +9,25 @@ this_or_default_value(x, default_value)
 \arguments{
 \item{x}{An object, list, or vector}
 
-\item{default_value}{A default value when object does not exist}
+\item{default_value}{A default value to use when object does not exist.
+Can be a single value (recycled for all NAs) or a vector matching
+the length of `x` for element-wise defaults.}
 }
 \value{
-Object or default value
+Object or default value. If `x` is a vector, returns a vector
+  with NAs/NULLs replaced by corresponding default values. Vectorized
+  to handle vectors element-wise.
 }
 \description{
 Returns given object if it exists, otherwise a provided default value
+}
+\details{
+This function is vectorized. When `x` has multiple elements:
+\itemize{
+  \item If `default_value` has length 1, it is recycled for all NA positions
+  \item If `default_value` matches length of `x`, values are applied element-wise
+  \item Mixed vectors of valid values and NAs are supported
+}
 }
 \examples{
 one_string <- "hello"
@@ -23,12 +35,33 @@ two_strings <- c(one_string, one_string)
 
 # returns the given object
 this_or_default_value(one_string, "default")
+#> [1] "hello"
 this_or_default_value(two_strings, "default")
+#> [1] "hello" "hello"
 
 # returns the provided default value ("default" here)
 this_or_default_value(NA, "default")
+#> [1] "default"
 this_or_default_value(NULL, "default")
+#> [1] "default"
 
 # returns c("default", "default") - function is vectorized
 this_or_default_value(c(NA, NA), "default")
+#> [1] "default" "default"
+
+# Mixed NA and valid values
+this_or_default_value(c("a", NA, "b"), "default")
+#> [1] "a"       "default" "b"
+
+# Vector recycling: single default for all NAs
+this_or_default_value(c(NA, NA, NA), "default")
+#> [1] "default" "default" "default"
+
+# Element-wise defaults matching vector length
+this_or_default_value(c(NA, NA), c("first", "second"))
+#> [1] "first"  "second"
+
+# Mixed input with vector defaults
+this_or_default_value(c("keep", NA), c("d1", "d2"))
+#> [1] "keep" "d2"
 }

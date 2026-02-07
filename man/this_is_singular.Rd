@@ -2,27 +2,36 @@
 % Please edit documentation in R/manage_missing.R
 \name{this_is_singular}
 \alias{this_is_singular}
-\title{Tests if all entries in a list or vector are the same}
+\title{Test if all entries in a vector or list are identical (singular)}
 \usage{
 this_is_singular(x)
 }
 \arguments{
-\item{x}{A vector or list}
+\item{x}{A vector or list to test}
 }
 \value{
-TRUE or FALSE
+Single logical value: `TRUE` if all elements are identical with
+  no NAs/NULLs, `FALSE` otherwise (including when NAs/NULLs are present).
 }
 \description{
-Only returns TRUE if there are no NA's or NULL's in the list or vector
+Returns TRUE only if all elements are the same AND there are no NA or NULL
+values present. Useful for validating that a vector contains a single
+repeated value.
 }
 \examples{
 # these are TRUE
 this_is_singular("a")
+#> [1] TRUE
 this_is_singular(c("a", "a"))
+#> [1] TRUE
 this_is_singular(list("a", "a"))
+#> [1] TRUE
 
 # these are FALSE
 this_is_singular(c("a", "b"))
+#> [1] FALSE
 this_is_singular(c("a", NA))
+#> [1] FALSE
 this_is_singular(list("a", NULL))
+#> [1] FALSE
 }
