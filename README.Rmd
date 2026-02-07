@@ -18,8 +18,18 @@ knitr::opts_chunk$set(
 <!-- badges: start -->
 <!-- badges: end -->
 
-The goal of aidr is to collect together a set of R functions that I otherwise
-keep on recreating in most projects.
+**aidr** is a personal R utility package containing commonly reused functions for managing missing data and cleaning text. It provides a consistent, intuitive API for handling NA, NULL, and empty values, along with tools for normalizing messy text data.
+
+## Why aidr?
+
+R's native handling of missing data can be inconsistent and verbose. This package provides:
+
+- **Universal existence checking** that works consistently across NA, NULL, and empty vectors
+- **Vectorized fallback functions** for replacing missing values with defaults
+- **Robust text cleaning** for HTML-formatted or irregularly spaced text
+- **Consistent behavior** across scalars, vectors, and lists
+
+Perfect for data cleaning pipelines, web scraping workflows, and reducing boilerplate in data analysis scripts.
 
 ## Installation
 
@@ -30,39 +40,160 @@ You can install the development version of aidr from [GitHub](https://github.com
 pak::pak("ryanraaum/aidr")
 ```
 
+## Features
+
+### Missing Data Management
+
+- `this_exists()` - Universal existence check (not NA, NULL, or empty)
+- `this_is_singular()` - Test if all elements are identical
+- `this_or_empty_string()` - Replace missing values with `""`
+- `this_or_default_value()` - Replace missing values with custom defaults
+- `this_or_na()` - Normalize missing values to NA
+
+### Text Munging
+
+- `tobasictext()` - Clean HTML, remove escapes, normalize whitespace
+
 ## Usage
 
-There are a few different categories of functions in the package, listed below.
-
-### Dealing with missing data of various sorts
-
-```{r example}
+```{r setup}
 library(aidr)
+```
 
-this_exists("this does exist")
-this_exists(c(1, 2)) # so does this
-this_exists(NA) # but this does not
-this_exists(NULL) # this also does not
-this_exists(c()) # neither does this (is empty)
-this_exists(list()) # nor this
-this_exists(c(1, 2, NA)) # BUT this does (vector has at least one non-NA)
+### Checking for existence
 
-this_is_singular(1) # TRUE
-this_is_singular(c(1, 1)) # TRUE, only one unique value
-this_is_singular(c(1, 2)) # FALSE
-this_is_singular(c(1, NA)) # anything with missing data is FALSE
+`this_exists()` provides a universal check that handles NA, NULL, and empty values consistently:
 
-this_or_empty_string("this")
+```{r existence}
+# These exist (return TRUE)
+this_exists("hello")
+this_exists(c(1, 2))
+this_exists(FALSE)  # FALSE is a real value!
+this_exists(0)      # So is zero
+
+# These don't exist (return FALSE)
+this_exists(NA)
+this_exists(NULL)
+this_exists(c())
+this_exists(list())
+
+# Vectors with at least one non-NA value exist
+this_exists(c(1, 2, NA))
+```
+
+### Testing for singular values
+
+`this_is_singular()` checks if all elements are identical (with no NAs or NULLs):
+
+```{r singular}
+this_is_singular(1)
+this_is_singular(c(1, 1))      # All same
+this_is_singular(c("a", "a"))  # Works with any type
+
+this_is_singular(c(1, 2))      # Different values
+this_is_singular(c(1, NA))     # NA present
+```
+
+### Replacing missing values
+
+The `this_or_*()` family provides vectorized fallback behavior:
+
+#### Replace with empty string
+
+```{r empty_string}
+this_or_empty_string("hello")
 this_or_empty_string(NA)
 this_or_empty_string(NULL)
-this_or_empty_string(c("this", NA))
 
-this_or_empty_string(list("a", "b")) # NOTE: lists are *simplified*
-this_or_empty_string(list(NULL, NULL))
+# Vectorized - works element-wise
+this_or_empty_string(c("hello", NA, "world"))
 
-this_or_na("this")
-this_or_na(NA)
-this_or_na(NULL)
-this_or_na(c("this", NA))
+# Lists are simplified to character vectors
+this_or_empty_string(list("a", NULL, "b"))
+```
+
+#### Replace with custom default
+
+```{r default_value}
+this_or_default_value("hello", "default")
+this_or_default_value(NA, "default")
+this_or_default_value(NULL, "default")
+
+# Vectorized with single default (recycled)
+this_or_default_value(c("hello", NA, "world"), "MISSING")
+
+# Element-wise defaults (matching length)
+this_or_default_value(c(NA, NA), c("first", "second"))
+
+# Mixed values with vector defaults
+this_or_default_value(c("keep", NA), c("d1", "d2"))
+```
+
+#### Normalize to NA
+
+```{r to_na}
+this_or_na("hello")
+this_or_na(NULL)     # NULL becomes NA
+this_or_na(c("hello", NA, "world"))
+```
+
+### Cleaning text
+
+`tobasictext()` cleans HTML-formatted or messily spaced text:
+
+```{r text_cleaning}
+# Remove HTML tags
+tobasictext("<p>This is <b>bold</b> text</p>")
+
+# Normalize whitespace
+tobasictext("lots    of     spaces")
+tobasictext("multiple\n\nlines\n\nhere")
+
+# Combined: HTML + whitespace + escapes
+messy <- "<p>This is some text.\n                    This is <b>bold!</b></p>"
+tobasictext(messy)
+
+# Vectorized
+tobasictext(c("<b>first</b>", "<i>second</i>", "plain"))
+```
+
+## Real-World Examples
+
+### Data cleaning pipeline
+
+```{r pipeline, eval=FALSE}
+# Clean survey data with missing responses
+survey_data %>%
+  mutate(
+    # Replace empty responses with "No response"
+    comment = this_or_default_value(comment, "No response"),
+    # Normalize missing ages
+    age = this_or_na(age),
+    # Clean HTML from text fields
+    description = tobasictext(description)
+  )
+```
+
+### Web scraping workflow
+
+```{r scraping, eval=FALSE}
+# Extract and clean web data
+page_data <- html_nodes(page, ".article") %>%
+  map_df(~ list(
+    title = .x %>% html_node(".title") %>% html_text() %>% tobasictext(),
+    author = .x %>% html_node(".author") %>% html_text() %>% this_or_default_value("Unknown")
+  ))
+```
+
+### Defensive programming
+
+```{r defensive, eval=FALSE}
+# Safe configuration with fallbacks
+config_value <- function(key, default = NULL) {
+  value <- Sys.getenv(key)
+  this_or_default_value(value, default)
+}
+
+api_key <- config_value("API_KEY", "test_key")
 ```
 
