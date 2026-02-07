@@ -83,3 +83,40 @@ test_that("this_or_na returns NA when appropriate", {
   expect_equal(this_or_na(NULL), NA)
   expect_equal(this_or_na(c(NA, NA)), c(NA, NA))
 })
+
+# Edge case tests: mixed NA vectors
+test_that("this_or_empty_string handles mixed NA vectors", {
+  expect_equal(this_or_empty_string(c("a", NA, "b")), c("a", "", "b"))
+})
+
+test_that("this_or_default_value handles mixed NA vectors", {
+  expect_equal(this_or_default_value(c("a", NA, "b"), "def"),
+               c("a", "def", "b"))
+})
+
+test_that("this_or_na handles mixed NA vectors", {
+  expect_equal(this_or_na(c("a", NA, "b")), c("a", NA, "b"))
+})
+
+# Edge case tests: vector length mismatches
+test_that("this_or_default_value recycles single default for vectors", {
+  expect_equal(this_or_default_value(c(NA, NA, NA), "default"),
+               c("default", "default", "default"))
+})
+
+test_that("this_or_default_value handles vector defaults matching length", {
+  expect_equal(this_or_default_value(c(NA, NA), c("d1", "d2")),
+               c("d1", "d2"))
+})
+
+test_that("this_or_default_value with mixed input and vector defaults", {
+  expect_equal(this_or_default_value(c("a", NA), c("d1", "d2")),
+               c("a", "d2"))
+})
+
+# Edge case tests: list handling
+test_that("this_or_empty_string simplifies lists as documented", {
+  result <- this_or_empty_string(list("a", NULL, "b"))
+  expect_equal(result, c("a", "", "b"))
+  expect_type(result, "character")
+})
