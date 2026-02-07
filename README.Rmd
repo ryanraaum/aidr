@@ -57,7 +57,8 @@ pak::pak("ryanraaum/aidr")
 ## Usage
 
 ```{r setup}
-library(aidr)
+# Load development version for accurate examples
+devtools::load_all(quiet = TRUE)
 ```
 
 ### Checking for existence

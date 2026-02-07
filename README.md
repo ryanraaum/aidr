@@ -51,7 +51,8 @@ pak::pak("ryanraaum/aidr")
 
 
 ``` r
-library(aidr)
+# Load development version for accurate examples
+devtools::load_all(quiet = TRUE)
 ```
 
 ### Checking for existence
@@ -187,8 +188,7 @@ tobasictext(messy)
 
 # Vectorized
 tobasictext(c("<b>first</b>", "<i>second</i>", "plain"))
-#> Error in `read_xml()`:
-#> ! `x` must be a single string, not a character vector.
+#> [1] "first"  "second" "plain"
 ```
 
 ## Real-World Examples
