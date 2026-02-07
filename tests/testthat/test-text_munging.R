@@ -37,3 +37,34 @@ test_that("tobasictext handles mixed escapes and HTML", {
   # Backslash escapes are removed, then HTML entities are parsed by rvest
   expect_equal(tobasictext("<b>\\&nbsp;</b>"), " ")
 })
+
+# Vectorization tests
+test_that("tobasictext is vectorized for character vectors", {
+  input <- c("<b>first</b>", "<i>second</i>", "third")
+  result <- tobasictext(input)
+  expect_equal(result, c("first", "second", "third"))
+  expect_length(result, 3)
+})
+
+test_that("tobasictext handles NULL input", {
+  expect_equal(tobasictext(NULL), NA_character_)
+})
+
+test_that("tobasictext handles NA in vectors", {
+  input <- c("<b>text</b>", NA, "plain")
+  result <- tobasictext(input)
+  expect_equal(result, c("text", NA_character_, "plain"))
+  expect_length(result, 3)
+})
+
+test_that("tobasictext vectorization with mixed content", {
+  input <- c(
+    "<p>First paragraph</p>",
+    "",
+    "<div><b>nested</b> content</div>",
+    "plain text"
+  )
+  result <- tobasictext(input)
+  expect_equal(result, c("First paragraph", NA_character_, "nested content", "plain text"))
+  expect_length(result, 4)
+})

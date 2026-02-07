@@ -120,3 +120,50 @@ test_that("this_or_empty_string simplifies lists as documented", {
   expect_equal(result, c("a", "", "b"))
   expect_type(result, "character")
 })
+
+# Validation tests: mismatched length errors
+test_that("this_or_default_value errors on mismatched vector lengths", {
+  expect_error(
+    this_or_default_value(c(NA, NA, NA), c("a", "b")),
+    "must have length 1.*or match length"
+  )
+
+  expect_error(
+    this_or_default_value(c(NA, NA), c("a", "b", "c")),
+    "must have length 1.*or match length"
+  )
+
+  expect_error(
+    this_or_default_value(c(NA, NA, NA, NA), c("a", "b")),
+    "must have length 1.*or match length"
+  )
+})
+
+# Length-1 list simplification tests
+test_that("this_or_empty_string simplifies length-1 lists", {
+  result <- this_or_empty_string(list("hello"))
+  expect_equal(result, "hello")
+  expect_type(result, "character")
+  expect_false(is.list(result))
+})
+
+test_that("this_or_default_value simplifies length-1 lists", {
+  result <- this_or_default_value(list(NA), "default")
+  expect_equal(result, "default")
+  expect_type(result, "character")
+  expect_false(is.list(result))
+})
+
+test_that("this_or_na simplifies length-1 lists", {
+  result <- this_or_na(list("hello"))
+  expect_equal(result, "hello")
+  expect_type(result, "character")
+  expect_false(is.list(result))
+})
+
+test_that("this_or_empty_string simplifies length-1 lists with NULL", {
+  result <- this_or_empty_string(list(NULL))
+  expect_equal(result, "")
+  expect_type(result, "character")
+  expect_false(is.list(result))
+})

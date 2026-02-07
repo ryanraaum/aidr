@@ -43,9 +43,18 @@
 #' tobasictext("a\n\nb\t\tc    d")
 #' #> [1] "a b c d"
 tobasictext <- function(txt) {
-  txt |>
-    stringr::str_squish() |>
-    stringr::str_replace_all("\\\\", "") |>
-    rvest::minimal_html() |>
-    rvest::html_text2()
+  # Handle NULL input
+  if (is.null(txt)) return(NA_character_)
+
+  # Vectorize the entire pipeline for each element
+  vapply(txt, function(single_txt) {
+    # Handle NA elements
+    if (is.na(single_txt)) return(NA_character_)
+
+    single_txt |>
+      stringr::str_squish() |>
+      stringr::str_replace_all("\\\\", "") |>
+      rvest::minimal_html() |>
+      rvest::html_text2()
+  }, character(1), USE.NAMES = FALSE)
 }

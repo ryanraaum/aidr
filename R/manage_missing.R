@@ -91,10 +91,18 @@ this_is_singular <- function(x) {
 # Internal vectorized wrapper with length recycling for default_value
 # Handles single default_value recycling and element-wise vector defaults
 .vectorized_this_or_set_default <- function(x, default_value) {
-  # Recycle single default_value to match length of x
+  # Validate and handle default_value length
   if (length(default_value) != length(x)) {
-    if (length(default_value) == 1) { default_value = rep(default_value,
-                                                          times=length(x))}
+    if (length(default_value) == 1) {
+      # Recycle single default_value to match length of x
+      default_value <- rep(default_value, times = length(x))
+    } else {
+      # Mismatched lengths - this is likely a user error
+      stop(
+        "`default_value` must have length 1 (recycled) or match length of `x` (",
+        length(x), "), not length ", length(default_value)
+      )
+    }
   }
   mapply(.singular_this_or_set_default, x, default_value, USE.NAMES = FALSE)
 }
@@ -138,7 +146,10 @@ this_is_singular <- function(x) {
 #' this_or_empty_string(list("a", NULL, "b"))
 #' #> [1] "a" ""  "b"
 this_or_empty_string <- function(x) {
-  if (length(x) > 1) { return(.vectorized_this_or_set_default(x, ""))}
+  # Treat lists as vectors regardless of length for consistent simplification
+  if (length(x) > 1 || is.list(x)) {
+    return(.vectorized_this_or_set_default(x, ""))
+  }
   .singular_this_or_set_default(x, "")
 }
 
@@ -199,7 +210,10 @@ this_or_empty_string <- function(x) {
 #' this_or_default_value(c("keep", NA), c("d1", "d2"))
 #' #> [1] "keep" "d2"
 this_or_default_value <- function(x, default_value) {
-  if (length(x) > 1) { return(.vectorized_this_or_set_default(x, default_value))}
+  # Treat lists as vectors regardless of length for consistent simplification
+  if (length(x) > 1 || is.list(x)) {
+    return(.vectorized_this_or_set_default(x, default_value))
+  }
   .singular_this_or_set_default(x, default_value)
 }
 
@@ -244,7 +258,10 @@ this_or_default_value <- function(x, default_value) {
 #' this_or_na(c("a", NA, "b"))
 #' #> [1] "a" NA  "b"
 this_or_na <- function(x) {
-  if (length(x) > 1) { return(.vectorized_this_or_na(x)) }
+  # Treat lists as vectors regardless of length for consistent simplification
+  if (length(x) > 1 || is.list(x)) {
+    return(.vectorized_this_or_na(x))
+  }
   .singular_this_or_na(x)
 }
 
